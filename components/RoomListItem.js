@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 16,
     top: 8,
+    color: 'rgba(0, 0, 0, 0.3)',
   },
   available: {
     position: 'absolute',
