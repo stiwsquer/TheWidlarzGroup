@@ -8,24 +8,39 @@ import {
 import { StyleSheet, View, TextInput } from 'react-native';
 import Header from '../components/Header';
 import SendIcon from '../svg/SendIcon';
+import { useQuery } from '@apollo/client';
+import { GET_ROOM } from '../queries/queries';
 
-export default function Room() {
+export default function Room({ route }) {
   const [messages, setMessages] = useState([]);
-
+  const { room } = route.params;
+  const roomId = room.id;
+  const { loading, error, data } = useQuery(GET_ROOM, {
+    variables: {
+      roomId,
+    },
+    pollInterval: 500,
+  });
+  if (loading) return null;
+  if (error) return null;
+  console.log(room.id);
   useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(),
+    setMessages(
+      room.messages.map((message) => ({
+        ...message,
+        text: message.body,
+        _id: message.id,
+        createdAt: message.insertedAt,
         user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
+          _id: message.user.id,
+          name: '',
+          avatar: '',
         },
-      },
-    ]);
+      }))
+    );
   }, []);
+
+  useEffect(() => console.log(data.room.id), [data]);
 
   const onSend = useCallback((messages = []) => {
     setMessages((previousMessages) =>
@@ -41,7 +56,7 @@ export default function Room() {
         messages={messages}
         onSend={(messages) => onSend(messages)}
         user={{
-          _id: 1,
+          _id: room.user.id,
         }}
         placeholder=""
         renderAvatar={null}
@@ -102,6 +117,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderBottomLeftRadius: 0,
     padding: 12,
+    marginBottom: 12,
     marginLeft: 52,
   },
   bubbleRight: {
@@ -109,6 +125,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderBottomRightRadius: 0,
     padding: 12,
+    marginBottom: 12,
     marginRight: 24,
   },
 });

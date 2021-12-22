@@ -2,17 +2,20 @@ import React from 'react';
 import { StyleSheet, View, Text, FlatList } from 'react-native';
 import Header from '../components/Header';
 import RoomListItem from '../components/RoomListItem';
+import { useQuery } from '@apollo/client';
+import { GET_ROOMS } from '../queries/queries';
 
 export default function Rooms() {
-  const data = ['dsf', 'sfd', 'sdf'];
+  const { loading, error, data } = useQuery(GET_ROOMS);
+  if (loading) return null;
+  if (error) return null;
+
   return (
     <View style={styles.container}>
       <Header rooms={true} />
       <FlatList
         keyExtractor={(item) => item.id}
-        onEndReachedThreshold={0.5}
-        // onEndReached={() => fetchData(value, nextPage, searchLimit)}
-        data={data}
+        data={data.usersRooms.rooms}
         renderItem={({ item }) => <RoomListItem item={item} />}
       />
     </View>
