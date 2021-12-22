@@ -7,7 +7,7 @@ export default function Rooms() {
   const data = ['dsf', 'sfd', 'sdf'];
   return (
     <View style={styles.container}>
-      <Header />
+      <Header rooms={true} />
       <FlatList
         keyExtractor={(item) => item.id}
         onEndReachedThreshold={0.5}

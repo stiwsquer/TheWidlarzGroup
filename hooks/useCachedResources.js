@@ -13,6 +13,7 @@ export default function useCachedResources() {
           'poopins-bold': require('../assets/fonts/Poppins/Poppins-Bold.ttf'),
           'poopins-500': require('../assets/fonts/Poppins/Poppins-Medium.ttf'),
           'poopins-400': require('../assets/fonts/Poppins/Poppins-Regular.ttf'),
+          'poopins-600': require('../assets/fonts/Poppins/Poppins-SemiBold.ttf'),
         });
       } catch (e) {
         console.warn(e);
