@@ -3,13 +3,6 @@ import { gql } from '@apollo/client';
 export const GET_ROOMS = gql`
   {
     usersRooms {
-      user {
-        email
-        firstName
-        lastName
-        id
-        role
-      }
       rooms {
         id
         name
@@ -51,6 +44,35 @@ export const SEND_MESSAGE = gql`
         lastName
         role
       }
+    }
+  }
+`;
+
+export const MESSAGE_ADDED = gql`
+  subscription newMessage($roomId: String!) {
+    messageAdded(roomId: $roomId) {
+      body
+      id
+      insertedAt
+      user {
+        email
+        firstName
+        id
+        lastName
+        role
+      }
+    }
+  }
+`;
+
+export const TYPING_USER = gql`
+  subscription typing($roomId: String!) {
+    typingUser(roomId: $roomId) {
+      email
+      firstName
+      id
+      lastName
+      role
     }
   }
 `;
