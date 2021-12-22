@@ -11,7 +11,7 @@ import { styles } from './Header.style';
 
 export default function Header({ rooms, name }) {
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, { marginBottom: rooms ? 36 : 0 }]}>
       <View style={styles.headerContent}>
         {rooms ? (
           <Text style={styles.title}>Rooms</Text>
