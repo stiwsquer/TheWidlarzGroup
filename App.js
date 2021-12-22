@@ -7,7 +7,7 @@ export default function App() {
   const isLoadingComplete = useCachedResources();
 
   if (!isLoadingComplete) return null;
-  console.log(process.env.EXPO_ACCESS_TOKEN);
+
   return (
     <ApolloProvider client={client}>
       <Navigation />

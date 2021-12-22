@@ -5,28 +5,32 @@ import {
   InputToolbar,
   Bubble,
 } from 'react-native-gifted-chat';
-import { StyleSheet, View, TextInput } from 'react-native';
-import Header from '../components/Header';
-import SendIcon from '../svg/SendIcon';
-import { useQuery } from '@apollo/client';
-import { GET_ROOM } from '../queries/queries';
+import { View } from 'react-native';
+import Header from '../../components/Header/Header';
+import SendIcon from '../../svg/SendIcon';
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_ROOM, SEND_MESSAGE } from '../../queries/queries';
+import { styles } from './Room.style';
 
 export default function Room({ route }) {
   const [messages, setMessages] = useState([]);
   const { room } = route.params;
   const roomId = room.id;
+
+  const [sendMessage] = useMutation(SEND_MESSAGE);
   const { loading, error, data } = useQuery(GET_ROOM, {
     variables: {
       roomId,
     },
     pollInterval: 500,
   });
+
   if (loading) return null;
   if (error) return null;
-  console.log(room.id);
+
   useEffect(() => {
     setMessages(
-      room.messages.map((message) => ({
+      data.room.messages.map((message) => ({
         ...message,
         text: message.body,
         _id: message.id,
@@ -40,9 +44,16 @@ export default function Room({ route }) {
     );
   }, []);
 
-  useEffect(() => console.log(data.room.id), [data]);
+  async function newMessage(body, roomId) {
+    try {
+      await sendMessage({ variables: { body: body, roomId: roomId } });
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   const onSend = useCallback((messages = []) => {
+    newMessage(messages[0].text, roomId);
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, messages)
     );
@@ -50,13 +61,13 @@ export default function Room({ route }) {
 
   return (
     <View style={styles.container}>
-      <Header />
+      <Header name={data.room.name} />
       <GiftedChat
         textInputStyle={styles.textInput}
         messages={messages}
         onSend={(messages) => onSend(messages)}
         user={{
-          _id: room.user.id,
+          _id: data.room.user.id,
         }}
         placeholder=""
         renderAvatar={null}
@@ -86,46 +97,3 @@ export default function Room({ route }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F0F8FF',
-  },
-  textInput: {
-    color: 'black',
-    padding: 12,
-    borderColor: '#5603AD',
-    backgroundColor: 'white',
-    borderWidth: 2,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    borderBottomLeftRadius: 12,
-  },
-  inputToolbar: {
-    padding: 16,
-    paddingEnd: 10,
-    backgroundColor: '#B6DEFD',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-  },
-  bubbleLeft: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    borderBottomLeftRadius: 0,
-    padding: 12,
-    marginBottom: 12,
-    marginLeft: 52,
-  },
-  bubbleRight: {
-    backgroundColor: '#993AFC',
-    borderRadius: 12,
-    borderBottomRightRadius: 0,
-    padding: 12,
-    marginBottom: 12,
-    marginRight: 24,
-  },
-});

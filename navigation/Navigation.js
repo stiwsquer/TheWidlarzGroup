@@ -2,8 +2,8 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { navigationRef } from './RootNavigation';
-import Rooms from '../screens/Rooms';
-import Room from '../screens/Room';
+import Rooms from '../screens/Rooms/Rooms';
+import Room from '../screens/Room/Room';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
