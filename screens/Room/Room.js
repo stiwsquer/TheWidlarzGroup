@@ -5,11 +5,11 @@ import {
   InputToolbar,
   Bubble,
 } from 'react-native-gifted-chat';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import Header from '../../components/Header/Header';
 import SendIcon from '../../svg/SendIcon';
-import { useQuery, useMutation } from '@apollo/client';
-import { GET_ROOM, SEND_MESSAGE } from '../../queries/queries';
+import { useQuery, useMutation, useSubscription } from '@apollo/client';
+import { GET_ROOM, SEND_MESSAGE, MESSAGE_ADDED } from '../../queries/queries';
 import { styles } from './Room.style';
 
 export default function Room({ route }) {
@@ -17,16 +17,20 @@ export default function Room({ route }) {
   const { room } = route.params;
   const roomId = room.id;
 
+  const {
+    data: subscriptionData,
+    loading: subscriptionLoading,
+    error: subscriptionError,
+  } = useSubscription(MESSAGE_ADDED, {
+    variables: { roomId },
+  });
+
   const [sendMessage] = useMutation(SEND_MESSAGE);
-  const { loading, error, data } = useQuery(GET_ROOM, {
+  const { loading, error, data, refetch } = useQuery(GET_ROOM, {
     variables: {
       roomId,
     },
-    pollInterval: 500,
   });
-
-  if (loading) return null;
-  if (error) return null;
 
   useEffect(() => {
     setMessages(
@@ -42,7 +46,13 @@ export default function Room({ route }) {
         },
       }))
     );
-  }, []);
+  }, [data]);
+
+  useEffect(() => {
+    if (!subscriptionLoading && !subscriptionError && subscriptionData) {
+      refetch();
+    }
+  }, [subscriptionData]);
 
   async function newMessage(body, roomId) {
     try {
@@ -59,9 +69,15 @@ export default function Room({ route }) {
     );
   }, []);
 
+  console.log(data);
+
+  if (loading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error</Text>;
+
   return (
     <View style={styles.container}>
       <Header name={data.room.name} />
+
       <GiftedChat
         textInputStyle={styles.textInput}
         messages={messages}
@@ -81,7 +97,6 @@ export default function Room({ route }) {
           <InputToolbar {...props} containerStyle={styles.inputToolbar} />
         )}
         minInputToolbarHeight={100}
-        // isTyping
         renderBubble={(props) => (
           <Bubble
             {...props}
