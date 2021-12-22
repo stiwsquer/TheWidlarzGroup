@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { navigate } from '../navigation/RootNavigation';
 import ProfileIcon from '../svg/ProfileIcon';
+import { useQuery } from '@apollo/client';
+import { GET_ROOM } from '../queries/queries';
 
 export default function RoomListItem({ item }) {
+  const roomId = item.id;
+  const { loading, error, data } = useQuery(GET_ROOM, {
+    variables: {
+      roomId,
+    },
+  });
+  if (loading) return null;
+  if (error) return null;
+  const room = data.room;
+
   return (
     <TouchableOpacity
       onPress={() => {
-        navigate('Room', { item });
+        navigate('Room', { room });
       }}
       style={styles.card}
     >
@@ -15,8 +27,12 @@ export default function RoomListItem({ item }) {
         <ProfileIcon />
       </View>
       <View>
-        <Text style={styles.conversationName}>The one with Ron</Text>
-        <Text style={styles.des}>Ron sent a photo.</Text>
+        <Text numberOfLines={1} style={styles.conversationName}>
+          {item.name}
+        </Text>
+        <Text numberOfLines={1} style={styles.des}>
+          {data.room.messages[0].body}
+        </Text>
       </View>
       <Text style={styles.availableTime}>24 m ago</Text>
       <View style={styles.available}></View>
@@ -35,6 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    paddingVertical: 14,
   },
   profilePicture: {
     backgroundColor: 'gray',
@@ -46,8 +63,9 @@ const styles = StyleSheet.create({
   },
   conversationName: {
     fontFamily: 'poopins-500',
+    width: '70%',
   },
-  des: { fontFamily: 'poopins-400' },
+  des: { fontFamily: 'poopins-400', width: '80%' },
   availableTime: {
     position: 'absolute',
     right: 16,
