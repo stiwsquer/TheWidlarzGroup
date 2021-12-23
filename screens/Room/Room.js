@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import {
   GiftedChat,
   Send,
@@ -9,9 +9,16 @@ import { View, Text } from 'react-native';
 import Header from '../../components/Header/Header';
 import SendIcon from '../../svg/SendIcon';
 import { useQuery, useMutation, useSubscription } from '@apollo/client';
-import { GET_ROOM, SEND_MESSAGE, MESSAGE_ADDED } from '../../queries/queries';
+import {
+  GET_ROOM,
+  SEND_MESSAGE,
+  MESSAGE_ADDED,
+  TYPING_USER_SUBSCRIPTION,
+  TYPING_USER_MUTATION,
+} from '../../queries/queries';
 import { styles } from './Room.style';
 import TypingIndicator from '../../components/TypingIndicator/TypingIndicator';
+import debounce from 'lodash.debounce';
 
 export default function Room({ route }) {
   const [messages, setMessages] = useState([]);
@@ -27,12 +34,34 @@ export default function Room({ route }) {
     variables: { roomId },
   });
 
+  const {
+    data: typingUserSubscriptionData,
+    loading: typingUserSubscriptionLoading,
+    error: typingUserSubscriptionError,
+  } = useSubscription(TYPING_USER_SUBSCRIPTION, {
+    variables: { roomId },
+  });
+
+  const [typingUser] = useMutation(TYPING_USER_MUTATION);
   const [sendMessage] = useMutation(SEND_MESSAGE);
   const { loading, error, data, refetch } = useQuery(GET_ROOM, {
     variables: {
       roomId,
     },
   });
+
+  useEffect(() => {
+    if (
+      !typingUserSubscriptionLoading &&
+      !typingUserSubscriptionError &&
+      typingUserSubscriptionData
+    ) {
+      if (typingUserSubscriptionData.typingUser.id !== data.room.user.id) {
+        setIsTyping(true);
+        debouncedHandleChange();
+      }
+    }
+  }, [typingUserSubscriptionData]);
 
   useEffect(() => {
     setMessages(
@@ -64,11 +93,31 @@ export default function Room({ route }) {
     }
   }
 
+  async function startTyping(roomId) {
+    try {
+      await typingUser({ variables: { roomId: roomId } });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   const onSend = useCallback((messages = []) => {
     newMessage(messages[0].text, roomId);
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, messages)
     );
+  }, []);
+
+  const handleChange = async () => {
+    setIsTyping(false);
+  };
+
+  const debouncedHandleChange = useMemo(() => debounce(handleChange, 300), []);
+
+  useEffect(() => {
+    return () => {
+      debouncedHandleChange.cancel();
+    };
   }, []);
 
   if (loading) return <Text>Loading...</Text>;
@@ -77,7 +126,6 @@ export default function Room({ route }) {
   return (
     <View style={styles.container}>
       <Header name={data.room.name} />
-      {/* <TypingIndicator isTyping={true} /> */}
       <GiftedChat
         textInputStyle={styles.textInput}
         messages={messages}
@@ -108,8 +156,8 @@ export default function Room({ route }) {
         )}
         renderDay={() => {}}
         renderTime={() => {}}
-        onInputTextChanged={(input) => {
-          setIsTyping(input === '' ? false : true);
+        onInputTextChanged={() => {
+          startTyping(roomId);
         }}
         renderChatFooter={() => <TypingIndicator isTyping={isTyping} />}
       />

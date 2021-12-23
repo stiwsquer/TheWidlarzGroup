@@ -65,8 +65,20 @@ export const MESSAGE_ADDED = gql`
   }
 `;
 
-export const TYPING_USER = gql`
-  subscription typing($roomId: String!) {
+export const TYPING_USER_SUBSCRIPTION = gql`
+  subscription typingSubscription($roomId: String!) {
+    typingUser(roomId: $roomId) {
+      email
+      firstName
+      id
+      lastName
+      role
+    }
+  }
+`;
+
+export const TYPING_USER_MUTATION = gql`
+  mutation typingMutation($roomId: String!) {
     typingUser(roomId: $roomId) {
       email
       firstName
