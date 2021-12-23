@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
   textInput: {
     color: 'black',
     padding: 12,
-    borderColor: '#5603AD',
+    borderColor: 'white',
     backgroundColor: 'white',
     borderWidth: 2,
     borderTopLeftRadius: 12,

@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, FlatList } from 'react-native';
 import Header from '../../components/Header/Header';
 import RoomListItem from '../../components/RoomListItem/RoomListItem';
 import { useQuery } from '@apollo/client';
-import { GET_ROOMS } from '../../queries/queries';
+import { GET_ROOMS } from '../../gql/queries';
 
 export default function Rooms() {
   const { loading, error, data } = useQuery(GET_ROOMS);

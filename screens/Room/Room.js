@@ -9,20 +9,23 @@ import { View, Text } from 'react-native';
 import Header from '../../components/Header/Header';
 import SendIcon from '../../svg/SendIcon';
 import { useQuery, useMutation, useSubscription } from '@apollo/client';
+import { GET_ROOM } from '../../gql/queries';
+import { MESSAGE_ADDED_SUBSCRIPTION } from '../../gql/subscriptions';
 import {
-  GET_ROOM,
-  SEND_MESSAGE,
-  MESSAGE_ADDED,
-  TYPING_USER_SUBSCRIPTION,
+  SEND_MESSAGE_MUTATION,
   TYPING_USER_MUTATION,
-} from '../../queries/queries';
+} from '../../gql/mutations';
+
 import { styles } from './Room.style';
 import TypingIndicator from '../../components/TypingIndicator/TypingIndicator';
 import debounce from 'lodash.debounce';
 
 export default function Room({ route }) {
   const [messages, setMessages] = useState([]);
-  const [isTyping, setIsTyping] = useState(false);
+  const [border, setBorder] = useState(false);
+  const [typingUser] = useMutation(TYPING_USER_MUTATION);
+  const [sendMessage] = useMutation(SEND_MESSAGE_MUTATION);
+
   const { room } = route.params;
   const roomId = room.id;
 
@@ -30,38 +33,15 @@ export default function Room({ route }) {
     data: subscriptionData,
     loading: subscriptionLoading,
     error: subscriptionError,
-  } = useSubscription(MESSAGE_ADDED, {
+  } = useSubscription(MESSAGE_ADDED_SUBSCRIPTION, {
     variables: { roomId },
   });
 
-  const {
-    data: typingUserSubscriptionData,
-    loading: typingUserSubscriptionLoading,
-    error: typingUserSubscriptionError,
-  } = useSubscription(TYPING_USER_SUBSCRIPTION, {
-    variables: { roomId },
-  });
-
-  const [typingUser] = useMutation(TYPING_USER_MUTATION);
-  const [sendMessage] = useMutation(SEND_MESSAGE);
   const { loading, error, data, refetch } = useQuery(GET_ROOM, {
     variables: {
       roomId,
     },
   });
-
-  useEffect(() => {
-    if (
-      !typingUserSubscriptionLoading &&
-      !typingUserSubscriptionError &&
-      typingUserSubscriptionData
-    ) {
-      if (typingUserSubscriptionData.typingUser.id !== data.room.user.id) {
-        setIsTyping(true);
-        debouncedHandleChange();
-      }
-    }
-  }, [typingUserSubscriptionData]);
 
   useEffect(() => {
     setMessages(
@@ -109,10 +89,10 @@ export default function Room({ route }) {
   }, []);
 
   const handleChange = async () => {
-    setIsTyping(false);
+    setBorder(false);
   };
 
-  const debouncedHandleChange = useMemo(() => debounce(handleChange, 300), []);
+  const debouncedHandleChange = useMemo(() => debounce(handleChange, 400), []);
 
   useEffect(() => {
     return () => {
@@ -127,7 +107,12 @@ export default function Room({ route }) {
     <View style={styles.container}>
       <Header name={data.room.name} />
       <GiftedChat
-        textInputStyle={styles.textInput}
+        textInputStyle={[
+          styles.textInput,
+          {
+            borderColor: border ? '#5603AD' : 'white',
+          },
+        ]}
         messages={messages}
         onSend={(messages) => onSend(messages)}
         user={{
@@ -144,7 +129,7 @@ export default function Room({ route }) {
         renderInputToolbar={(props) => (
           <InputToolbar {...props} containerStyle={styles.inputToolbar} />
         )}
-        minInputToolbarHeight={100}
+        minInputToolbarHeight={70}
         renderBubble={(props) => (
           <Bubble
             {...props}
@@ -158,8 +143,12 @@ export default function Room({ route }) {
         renderTime={() => {}}
         onInputTextChanged={() => {
           startTyping(roomId);
+          setBorder(true);
+          debouncedHandleChange();
         }}
-        renderChatFooter={() => <TypingIndicator isTyping={isTyping} />}
+        renderFooter={() => (
+          <TypingIndicator roomId={roomId} userId={data.room.user.id} />
+        )}
       />
     </View>
   );
