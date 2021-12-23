@@ -15,7 +15,6 @@ import {
   SEND_MESSAGE_MUTATION,
   TYPING_USER_MUTATION,
 } from '../../gql/mutations';
-
 import { styles } from './Room.style';
 import TypingIndicator from '../../components/TypingIndicator/TypingIndicator';
 import debounce from 'lodash.debounce';

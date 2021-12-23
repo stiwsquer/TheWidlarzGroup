@@ -20,8 +20,11 @@ export const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   buttonContainer: {
-    position: 'absolute',
-    bottom: 0,
     width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    minHeight: '20%',
+    flex: 2,
+    marginTop: 16,
   },
 });
