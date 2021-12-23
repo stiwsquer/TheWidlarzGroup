@@ -11,9 +11,11 @@ import SendIcon from '../../svg/SendIcon';
 import { useQuery, useMutation, useSubscription } from '@apollo/client';
 import { GET_ROOM, SEND_MESSAGE, MESSAGE_ADDED } from '../../queries/queries';
 import { styles } from './Room.style';
+import TypingIndicator from '../../components/TypingIndicator/TypingIndicator';
 
 export default function Room({ route }) {
   const [messages, setMessages] = useState([]);
+  const [isTyping, setIsTyping] = useState(false);
   const { room } = route.params;
   const roomId = room.id;
 
@@ -69,15 +71,13 @@ export default function Room({ route }) {
     );
   }, []);
 
-  console.log(data);
-
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error</Text>;
 
   return (
     <View style={styles.container}>
       <Header name={data.room.name} />
-
+      {/* <TypingIndicator isTyping={true} /> */}
       <GiftedChat
         textInputStyle={styles.textInput}
         messages={messages}
@@ -108,6 +108,10 @@ export default function Room({ route }) {
         )}
         renderDay={() => {}}
         renderTime={() => {}}
+        onInputTextChanged={(input) => {
+          setIsTyping(input === '' ? false : true);
+        }}
+        renderChatFooter={() => <TypingIndicator isTyping={isTyping} />}
       />
     </View>
   );
