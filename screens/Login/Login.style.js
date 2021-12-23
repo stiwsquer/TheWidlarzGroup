@@ -35,15 +35,16 @@ export const styles = StyleSheet.create({
   form: {
     position: 'absolute',
     top: 244,
-    bottom: 70,
+    bottom: 0,
     width: '80%',
   },
 
   signUp: {
-    position: 'absolute',
-    bottom: 20,
-    flexDirection: 'row',
+    width: '100%',
     alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    height: '15%',
     justifyContent: 'center',
   },
 
