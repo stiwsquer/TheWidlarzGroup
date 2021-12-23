@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 16,
+    marginBottom: 52,
   },
   icon: {
     transform: [{ scale: 0.55 }],

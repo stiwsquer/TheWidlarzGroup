@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { navigate } from '../../navigation/RootNavigation';
 import ProfileIcon from '../../svg/ProfileIcon';
 import { useQuery } from '@apollo/client';
-import { GET_ROOM } from '../../queries/queries';
+import { GET_ROOM } from '../../gql/queries';
 import { styles } from './RoomListItem.style';
 
 export default function RoomListItem({ item }) {
