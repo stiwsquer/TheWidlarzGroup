@@ -5,6 +5,7 @@ import { navigationRef } from './RootNavigation';
 import Rooms from '../screens/Rooms/Rooms';
 import Room from '../screens/Room/Room';
 import Login from '../screens/Login/Login';
+import Register from '../screens/Register/Register';
 
 const { Navigator, Screen } = createNativeStackNavigator();
 
@@ -21,6 +22,11 @@ export default function Navigation() {
         <Screen
           name="Login"
           component={Login}
+          options={{ headerShown: false }}
+        />
+        <Screen
+          name="Register"
+          component={Register}
           options={{ headerShown: false }}
         />
       </Navigator>

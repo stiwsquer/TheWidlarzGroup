@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    minHeight: 880,
+    height: 1000,
     backgroundColor: '#B6DEFD',
     display: 'flex',
     alignItems: 'center',
@@ -20,22 +20,14 @@ export const styles = StyleSheet.create({
     left: 16,
   },
 
-  description: {
-    fontFamily: 'poopins-700',
-    color: 'white',
-    flex: 1,
-    left: 16,
-    top: 142,
-    width: '80%',
-    fontSize: 22,
-    lineHeight: 33,
-    position: 'absolute',
-  },
-
   form: {
     position: 'absolute',
-    top: 244,
+    top: 154,
     bottom: 0,
     width: '80%',
+  },
+
+  field: {
+    marginTop: 16,
   },
 });

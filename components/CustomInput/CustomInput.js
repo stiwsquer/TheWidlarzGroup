@@ -15,7 +15,7 @@ const CustomInput = (props) => {
   } = props;
 
   const hasError = errors[name] && touched[name];
-  const password = name === 'password';
+  const password = name === 'password' || name === 'passwordConfirmation';
 
   const handleChange = async () => {
     setTyping(false);
@@ -29,12 +29,25 @@ const CustomInput = (props) => {
     };
   }, []);
 
+  const chooseLabel = () => {
+    switch (name) {
+      case 'email':
+        return 'e-mail address';
+      case 'firstName':
+        return 'first name';
+      case 'lastName':
+        return 'last name';
+      case 'password':
+        return 'password';
+      case 'passwordConfirmation':
+        return 'password confirmation';
+    }
+  };
+
   return (
     <>
       <View style={styles.field} {...inputProps}>
-        <Text style={styles.label}>
-          {name === 'email' ? 'e-mail address' : name}
-        </Text>
+        <Text style={styles.label}>{chooseLabel()}</Text>
         <View style={styles.fieldContainer}>
           <TextInput
             style={[
@@ -47,7 +60,6 @@ const CustomInput = (props) => {
               debouncedHandleChange();
               return onChange(name)(text);
             }}
-            // onChangeText={(text) => onChange(name)(text)}
             value={value}
             onBlur={() => {
               setFieldTouched(name);
