@@ -65,6 +65,10 @@ export default function Room({ route }) {
     }
   }, [subscriptionData]);
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
   async function newMessage(body, roomId) {
     try {
       await sendMessage({ variables: { body: body, roomId: roomId } });
@@ -110,7 +114,7 @@ export default function Room({ route }) {
         textInputStyle={[
           styles.textInput,
           {
-            borderColor: border ? '#5603AD' : 'white',
+            borderWidth: border ? 2 : 0,
           },
         ]}
         messages={messages}
