@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     padding: 12,
     borderColor: 'white',
     backgroundColor: 'white',
-    borderWidth: 2,
+    borderColor: '#5603AD',
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     borderBottomLeftRadius: 12,

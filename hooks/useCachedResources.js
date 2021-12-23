@@ -14,6 +14,7 @@ export default function useCachedResources() {
           'poopins-500': require('../assets/fonts/Poppins/Poppins-Medium.ttf'),
           'poopins-400': require('../assets/fonts/Poppins/Poppins-Regular.ttf'),
           'poopins-600': require('../assets/fonts/Poppins/Poppins-SemiBold.ttf'),
+          'poopins-700': require('../assets/fonts/Poppins/Poppins-Bold.ttf'),
         });
       } catch (e) {
         console.warn(e);
