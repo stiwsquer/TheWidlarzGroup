@@ -23,8 +23,6 @@ export const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     justifyContent: 'flex-end',
-    minHeight: '20%',
-    flex: 2,
-    marginTop: 16,
+    marginTop: 32,
   },
 });

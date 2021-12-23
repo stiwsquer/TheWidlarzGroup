@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, TouchableNativeFeedback } from 'react-native';
+import { ScrollView, View, Text, TouchableNativeFeedback } from 'react-native';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { styles } from './Login.style';
@@ -9,6 +9,7 @@ import SubmitButton from '../../components/SubmitButton/SubmitButton';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER_MUTATION } from '../../gql/mutations';
 import { storeLoginUser } from '../../token/tokenStorage';
+import BottomInfo from '../../components/BottomInfo/BottomInfo';
 
 export default function Login() {
   const [loginUser, { data, loading, error }] =
@@ -37,7 +38,11 @@ export default function Login() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={{ flex: 1 }}
+      scrollEnabled={true}
+      contentContainerStyle={styles.container}
+    >
       <Text style={styles.heading}>Welcome back</Text>
       <Text style={styles.description}>
         Log in and stay in touch with everyone!
@@ -67,20 +72,17 @@ export default function Login() {
               handleSubmit={handleSubmit}
               isValid={isValid}
               text="Log in"
+              style={{ marginTop: 250 }}
             />
-            <View style={styles.signUp}>
-              <Text style={styles.signUpText1}>Don't have an account?</Text>
-              <TouchableNativeFeedback
-                onPress={() => {
-                  navigate('Rooms');
-                }}
-              >
-                <Text style={styles.signUpText2}>Sign up</Text>
-              </TouchableNativeFeedback>
-            </View>
+
+            <BottomInfo
+              route="Register"
+              question="Don't have an account?"
+              linkText="Sign up"
+            />
           </View>
         )}
       </Formik>
-    </View>
+    </ScrollView>
   );
 }
