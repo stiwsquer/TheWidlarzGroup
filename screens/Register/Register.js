@@ -2,18 +2,18 @@ import React, { useEffect } from 'react';
 import { ScrollView, View, Text, ActivityIndicator } from 'react-native';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
-import { styles } from './Register.style';
+import { useMutation } from '@apollo/client';
+import styles from './Register.style';
 import CustomInput from '../../components/CustomInput/CustomInput';
 import SubmitButton from '../../components/SubmitButton/SubmitButton';
 import BottomInfo from '../../components/BottomInfo/BottomInfo';
 import TermsAndPrivacyInfo from '../../components/TermsAndPrivacyInfo/TermsAndPrivacyInfo';
-import { useMutation } from '@apollo/client';
 import { REGISTER_USER_MUTATION } from '../../gql/mutations';
 import { navigate } from '../../navigation/RootNavigation';
 
 export default function Login() {
   const [registerUser, { data, loading, error }] = useMutation(
-    REGISTER_USER_MUTATION
+    REGISTER_USER_MUTATION,
   );
 
   const register = async (values) => {

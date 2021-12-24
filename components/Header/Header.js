@@ -7,7 +7,7 @@ import TWGIcon from '../../svg/TWGIcon';
 import LeftArrowIcon from '../../svg/LeftArrowIcon';
 import VideoCallIcon from '../../svg/VideoCallIcon';
 import { navigate } from '../../navigation/RootNavigation';
-import { styles } from './Header.style';
+import styles from './Header.style';
 
 export default function Header({ rooms, name }) {
   return (

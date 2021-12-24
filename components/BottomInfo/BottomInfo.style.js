@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   text: {
     width: '100%',
     alignItems: 'center',
@@ -22,3 +22,5 @@ export const styles = StyleSheet.create({
     marginLeft: 12,
   },
 });
+
+export default styles;

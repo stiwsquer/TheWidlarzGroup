@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
+import { useQuery } from '@apollo/client';
 import Header from '../../components/Header/Header';
 import RoomListItem from '../../components/RoomListItem/RoomListItem';
-import { useQuery } from '@apollo/client';
 import { GET_ROOMS } from '../../gql/queries';
 
 export default function Rooms() {
@@ -12,7 +12,7 @@ export default function Rooms() {
 
   return (
     <View style={styles.container}>
-      <Header rooms={true} />
+      <Header rooms />
       <FlatList
         keyExtractor={(item) => item.id}
         data={data.usersRooms.rooms}

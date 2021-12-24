@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { styles } from './SubmitButton.style';
+import styles from './SubmitButton.style';
 
 export default function SubmitButton({
   handleSubmit,

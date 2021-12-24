@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   header: {
     position: 'relative',
     width: '100%',
@@ -49,3 +49,4 @@ export const styles = StyleSheet.create({
     width: '50%',
   },
 });
+export default styles;

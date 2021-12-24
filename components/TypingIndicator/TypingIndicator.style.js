@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   animated: {
     marginBottom: 10,
     width: 67,
@@ -20,3 +20,4 @@ export const styles = StyleSheet.create({
     transform: [{ scale: 0.55 }],
   },
 });
+export default styles;

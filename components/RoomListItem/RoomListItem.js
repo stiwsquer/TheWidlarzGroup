@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { useQuery } from '@apollo/client';
 import { navigate } from '../../navigation/RootNavigation';
 import ProfileIcon from '../../svg/ProfileIcon';
-import { useQuery } from '@apollo/client';
 import { GET_ROOM } from '../../gql/queries';
-import { styles } from './RoomListItem.style';
+import styles from './RoomListItem.style';
 
 export default function RoomListItem({ item }) {
   const roomId = item.id;

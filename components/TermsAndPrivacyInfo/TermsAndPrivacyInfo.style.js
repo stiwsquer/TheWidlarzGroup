@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   terms: {
     marginTop: 16,
     display: 'flex',
@@ -26,3 +26,4 @@ export const styles = StyleSheet.create({
     color: '#259DFA',
   },
 });
+export default styles;
