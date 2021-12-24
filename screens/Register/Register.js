@@ -1,5 +1,5 @@
-import React from 'react';
-import { ScrollView, View, Text } from 'react-native';
+import React, { useEffect } from 'react';
+import { ScrollView, View, Text, ActivityIndicator } from 'react-native';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { styles } from './Register.style';
@@ -7,12 +7,40 @@ import CustomInput from '../../components/CustomInput/CustomInput';
 import SubmitButton from '../../components/SubmitButton/SubmitButton';
 import BottomInfo from '../../components/BottomInfo/BottomInfo';
 import TermsAndPrivacyInfo from '../../components/TermsAndPrivacyInfo/TermsAndPrivacyInfo';
+import { useMutation } from '@apollo/client';
+import { REGISTER_USER_MUTATION } from '../../gql/mutations';
+import { navigate } from '../../navigation/RootNavigation';
 
 export default function Login() {
+  const [registerUser, { data, loading, error }] = useMutation(
+    REGISTER_USER_MUTATION
+  );
+
+  const register = async (values) => {
+    try {
+      await registerUser({
+        variables: {
+          email: values.email,
+          firstName: values.firstName,
+          lastName: values.lastName,
+          password: values.password,
+          passwordConfirmation: values.passwordConfirmation,
+        },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (!loading && !error && data) {
+      navigate('Login');
+    }
+  }, [data]);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.heading}>Create account</Text>
-
       <Formik
         initialValues={{ email: '', password: '' }}
         validationSchema={Yup.object().shape({
@@ -27,7 +55,10 @@ export default function Login() {
             .max(255)
             .oneOf([Yup.ref('password'), null], 'Passwords must match'),
         })}
-        onSubmit={(values) => login(values)}
+        onSubmit={(values, { resetForm }) => {
+          register(values);
+          resetForm({ values: '' });
+        }}
       >
         {({ handleSubmit, isValid }) => (
           <View style={styles.form}>
@@ -66,6 +97,17 @@ export default function Login() {
           </View>
         )}
       </Formik>
+      {loading ? (
+        <View
+          style={{
+            position: 'absolute',
+            top: 500,
+            left: '50%',
+          }}
+        >
+          <ActivityIndicator color="#5603AD" />
+        </View>
+      ) : null}
     </ScrollView>
   );
 }

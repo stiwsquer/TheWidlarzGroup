@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ScrollView, View, Text, TouchableNativeFeedback } from 'react-native';
+import { ScrollView, View, Text, ActivityIndicator } from 'react-native';
 import { Formik, Field } from 'formik';
 import * as Yup from 'yup';
 import { styles } from './Login.style';
@@ -27,7 +27,6 @@ export default function Login() {
 
   useEffect(() => {
     if (!loading && !error && data) {
-      console.log(data);
       storeLoginUser(data);
       navigate('Rooms');
     }
@@ -57,11 +56,13 @@ export default function Login() {
             .required('Email is required'),
           password: Yup.string().max(255).required('Password is required'),
         })}
-        onSubmit={(values) => login(values)}
+        onSubmit={(values, { resetForm }) => {
+          login(values);
+          resetForm({ values: '' });
+        }}
       >
         {({ handleSubmit, isValid }) => (
           <View style={styles.form}>
-            {error ? <Text>Invalid credentials</Text> : null}
             <Field component={CustomInput} name="email" />
             <Field
               component={CustomInput}
@@ -83,6 +84,18 @@ export default function Login() {
           </View>
         )}
       </Formik>
+
+      {loading ? (
+        <View
+          style={{
+            position: 'absolute',
+            top: 500,
+            left: '50%',
+          }}
+        >
+          <ActivityIndicator color="#5603AD" />
+        </View>
+      ) : null}
     </ScrollView>
   );
 }
