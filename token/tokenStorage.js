@@ -8,7 +8,6 @@ export const getToken = async () => {
       const {
         loginUser: { token },
       } = data;
-      console.log(token);
       return token;
     }
     return null;

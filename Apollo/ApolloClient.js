@@ -13,7 +13,6 @@ const httpLink = createHttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
   const token = await getToken();
-  console.log(token);
   return {
     headers: {
       ...headers,
@@ -29,7 +28,7 @@ const phoenixSocket = new PhoenixSocket(
   {
     params: async () => {
       const token = await getToken();
-      console.log(token);
+
       if (token) {
         return { token: token };
       } else {

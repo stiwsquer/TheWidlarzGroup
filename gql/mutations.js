@@ -43,3 +43,27 @@ export const LOGIN_USER_MUTATION = gql`
     }
   }
 `;
+
+export const REGISTER_USER_MUTATION = gql`
+  mutation registerMutation(
+    $email: String!,
+    $firstName: String!,
+    $lastName: String!,
+    $password: String!,
+    $passwordConfirmation: String!
+  ) {
+    registerUser(
+      email: $email,
+      firstName: $firstName,
+      lastName: $lastName,
+      password: $password,
+      passwordConfirmation: $passwordConfirmation
+    ) {
+      email
+      firstName
+      id
+      lastName
+      role
+    }
+  }
+`;
