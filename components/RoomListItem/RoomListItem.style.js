@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   card: {
     borderRadius: 12,
     marginBottom: 12,
@@ -42,3 +42,4 @@ export const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
+export default styles;

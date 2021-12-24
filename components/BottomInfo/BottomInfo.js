@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { navigate } from '../../navigation/RootNavigation';
-import { styles } from './BottomInfo.style';
+import styles from './BottomInfo.style';
 
 export default function BottomInfo({
   question,

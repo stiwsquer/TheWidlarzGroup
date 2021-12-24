@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { styles } from './TermsAndPrivacyInfo.style';
-import { Linking } from 'react-native';
+import { View, Text, Linking } from 'react-native';
+import styles from './TermsAndPrivacyInfo.style';
 
 export default function TermsAndPrivacyInfo() {
   return (

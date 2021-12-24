@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   label: {
     fontFamily: 'poopins-500',
     color: 'white',
@@ -43,3 +43,4 @@ export const styles = StyleSheet.create({
     borderColor: '#5603AD',
   },
 });
+export default styles;

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   button: {
     padding: 12,
     borderRadius: 12,
@@ -26,3 +26,4 @@ export const styles = StyleSheet.create({
     marginTop: 32,
   },
 });
+export default styles;

@@ -6,18 +6,18 @@ import {
   Bubble,
 } from 'react-native-gifted-chat';
 import { View, Text } from 'react-native';
+import { useQuery, useMutation, useSubscription } from '@apollo/client';
+import debounce from 'lodash.debounce';
 import Header from '../../components/Header/Header';
 import SendIcon from '../../svg/SendIcon';
-import { useQuery, useMutation, useSubscription } from '@apollo/client';
 import { GET_ROOM } from '../../gql/queries';
 import { MESSAGE_ADDED_SUBSCRIPTION } from '../../gql/subscriptions';
 import {
   SEND_MESSAGE_MUTATION,
   TYPING_USER_MUTATION,
 } from '../../gql/mutations';
-import { styles } from './Room.style';
+import styles from './Room.style';
 import TypingIndicator from '../../components/TypingIndicator/TypingIndicator';
-import debounce from 'lodash.debounce';
 
 export default function Room({ route }) {
   const [messages, setMessages] = useState([]);
@@ -54,7 +54,7 @@ export default function Room({ route }) {
           name: '',
           avatar: '',
         },
-      }))
+      })),
     );
   }, [data]);
 
@@ -70,7 +70,7 @@ export default function Room({ route }) {
 
   async function newMessage(body, roomId) {
     try {
-      await sendMessage({ variables: { body: body, roomId: roomId } });
+      await sendMessage({ variables: { body, roomId } });
     } catch (e) {
       console.error(e);
     }
@@ -78,7 +78,7 @@ export default function Room({ route }) {
 
   async function startTyping(roomId) {
     try {
-      await typingUser({ variables: { roomId: roomId } });
+      await typingUser({ variables: { roomId } });
     } catch (e) {
       console.error(e);
     }
@@ -87,7 +87,7 @@ export default function Room({ route }) {
   const onSend = useCallback((messages = []) => {
     newMessage(messages[0].text, roomId);
     setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
+      GiftedChat.append(previousMessages, messages),
     );
   }, []);
 
@@ -97,11 +97,12 @@ export default function Room({ route }) {
 
   const debouncedHandleChange = useMemo(() => debounce(handleChange, 400), []);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       debouncedHandleChange.cancel();
-    };
-  }, []);
+    },
+    [],
+  );
 
   if (loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error</Text>;
